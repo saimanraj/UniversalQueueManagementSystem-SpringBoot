@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - UQS Queue System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body class="auth-bg">
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-6">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-ticket-alt fa-3x text-primary mb-3"></i>
+                        <h3 class="fw-bold">
+                            <span th:if="${type == 'vendor'}">Vendor Registration</span>
+                            <span th:unless="${type == 'vendor'}">Customer Registration</span>
+                        </h3>
+                        <p class="text-muted">Create your UQS account</p>
+                    </div>
+
+                    <!-- Toggle tabs -->
+                    <ul class="nav nav-pills nav-fill mb-4 rounded-pill bg-light p-1">
+                        <li class="nav-item">
+                            <a class="nav-link rounded-pill"
+                               th:classappend="${type != 'vendor'} ? 'active' : ''"
+                               href="/register?type=customer">
+                                <i class="fas fa-user me-2"></i>Customer
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link rounded-pill"
+                               th:classappend="${type == 'vendor'} ? 'active' : ''"
+                               href="/register?type=vendor">
+                                <i class="fas fa-store me-2"></i>Vendor
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div th:if="${error}" class="alert alert-danger rounded-3">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <span th:text="${error}"></span>
+                    </div>
+
+                    <form th:action="@{/register(type=${type})}" method="post"
+                          th:object="${registerDto}">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Full Name *</label>
+                                <input type="text" th:field="*{name}" class="form-control"
+                                       th:class="${#fields.hasErrors('name')} ? 'form-control is-invalid' : 'form-control'"
+                                       placeholder="Your full name">
+                                <div th:if="${#fields.hasErrors('name')}" class="invalid-feedback"
+                                     th:errors="*{name}"></div>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Email Address *</label>
+                                <input type="email" th:field="*{email}" class="form-control"
+                                       th:class="${#fields.hasErrors('email')} ? 'form-control is-invalid' : 'form-control'"
+                                       placeholder="your@email.com">
+                                <div th:if="${#fields.hasErrors('email')}" class="invalid-feedback"
+                                     th:errors="*{email}"></div>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Phone Number</label>
+                                <input type="text" th:field="*{phone}" class="form-control"
+                                       placeholder="10-digit mobile number">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Password *</label>
+                                <input type="password" th:field="*{password}" class="form-control"
+                                       th:class="${#fields.hasErrors('password')} ? 'form-control is-invalid' : 'form-control'"
+                                       placeholder="Min 6 characters">
+                                <div th:if="${#fields.hasErrors('password')}" class="invalid-feedback"
+                                     th:errors="*{password}"></div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Confirm Password *</label>
+                                <input type="password" th:field="*{confirmPassword}" class="form-control"
+                                       placeholder="Repeat password">
+                            </div>
+
+                            <!-- Vendor-specific fields -->
+                            <div th:if="${type == 'vendor'}" class="col-12">
+                                <hr><h6 class="text-muted fw-semibold mb-3"><i class="fas fa-store me-2"></i>Shop Details</h6>
+                            </div>
+
+                            <div th:if="${type == 'vendor'}" class="col-12">
+                                <label class="form-label fw-semibold">Shop Name *</label>
+                                <input type="text" th:field="*{shopName}" class="form-control"
+                                       placeholder="Your shop or business name">
+                            </div>
+
+                            <div th:if="${type == 'vendor'}" class="col-md-6">
+                                <label class="form-label fw-semibold">Category</label>
+                                <select th:field="*{category}" class="form-select">
+                                    <option value="">Select category</option>
+                                    <option value="Healthcare">Healthcare / Hospital</option>
+                                    <option value="Banking">Banking / Finance</option>
+                                    <option value="Government">Government Services</option>
+                                    <option value="Restaurant">Restaurant / Food</option>
+                                    <option value="Retail">Retail / Shop</option>
+                                    <option value="Salon">Salon / Beauty</option>
+                                    <option value="Education">Education</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+
+                            <div th:if="${type == 'vendor'}" class="col-md-6">
+                                <label class="form-label fw-semibold">Avg Service Time (mins)</label>
+                                <input type="number" th:field="*{avgServiceTime}" class="form-control"
+                                       min="1" max="120" placeholder="e.g. 5">
+                            </div>
+
+                            <div th:if="${type == 'vendor'}" class="col-12">
+                                <label class="form-label fw-semibold">Address</label>
+                                <input type="text" th:field="*{address}" class="form-control"
+                                       placeholder="Shop address">
+                            </div>
+
+                            <div th:if="${type == 'vendor'}" class="col-12">
+                                <label class="form-label fw-semibold">Description</label>
+                                <textarea th:field="*{description}" class="form-control" rows="2"
+                                          placeholder="Brief description of your services"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-primary py-2 fw-semibold rounded-3">
+                                <i class="fas fa-user-plus me-2"></i>Create Account
+                            </button>
+                        </div>
+                    </form>
+
+                    <p class="text-center text-muted mt-4 mb-0">
+                        Already have an account? <a href="/login" class="text-primary fw-semibold">Sign In</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

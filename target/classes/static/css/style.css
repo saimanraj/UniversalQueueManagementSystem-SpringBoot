@@ -1,0 +1,236 @@
+/* ==========================================
+   UQS - Online Queue Management System
+   Main Stylesheet
+   ========================================== */
+
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* ── Root Variables ── */
+:root {
+    --primary:    #4361ee;
+    --success:    #2ec4b6;
+    --warning:    #ff9f1c;
+    --danger:     #e63946;
+    --info:       #4cc9f0;
+    --dark:       #1a1a2e;
+    --light-bg:   #f8f9fc;
+    --card-radius: 1rem;
+    --shadow:     0 4px 24px rgba(67,97,238,.08);
+}
+
+/* ── Base ── */
+* { box-sizing: border-box; }
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: var(--light-bg);
+    color: #212529;
+}
+
+/* ── Auth Pages ── */
+.auth-bg {
+    background: linear-gradient(135deg, #4361ee 0%, #3f37c9 50%, #480ca8 100%);
+    min-height: 100vh;
+}
+
+.auth-bg .card {
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+/* ── Navbar Overrides ── */
+.navbar {
+    padding: .75rem 1rem;
+}
+.navbar-brand {
+    font-size: 1.2rem;
+    letter-spacing: -.3px;
+}
+.nav-link {
+    font-weight: 500;
+    border-radius: .5rem;
+    padding: .4rem .75rem !important;
+    transition: background .2s;
+}
+.navbar-dark .nav-link:hover {
+    background: rgba(255,255,255,.12);
+}
+
+/* ── Cards ── */
+.card {
+    border-radius: var(--card-radius) !important;
+    transition: transform .2s, box-shadow .2s;
+}
+.hover-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(67,97,238,.15) !important;
+}
+
+/* ── Buttons ── */
+.btn {
+    font-weight: 600;
+    letter-spacing: .2px;
+    transition: all .2s;
+}
+.btn-primary {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+.btn-primary:hover {
+    background: #3451d1;
+    border-color: #3451d1;
+    transform: translateY(-1px);
+}
+.btn-success {
+    background: #2ecc71;
+    border-color: #2ecc71;
+}
+.btn-success:hover {
+    background: #27ae60;
+    border-color: #27ae60;
+}
+
+/* ── Badges ── */
+.badge {
+    font-weight: 600;
+    letter-spacing: .3px;
+}
+
+/* ── Tables ── */
+.table thead th {
+    font-weight: 600;
+    font-size: .8rem;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    color: #6c757d;
+    border-bottom: none;
+    padding: .9rem 1rem;
+}
+.table tbody td {
+    padding: .85rem 1rem;
+    vertical-align: middle;
+    border-color: #f0f0f0;
+}
+.table-hover tbody tr:hover {
+    background: #f8f9ff;
+}
+
+/* ── Sidebar ── */
+.sidebar {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    flex-shrink: 0;
+}
+.sidebar .nav-link {
+    font-size: .9rem;
+    padding: .6rem .9rem !important;
+    transition: all .2s;
+    color: rgba(255,255,255,.6) !important;
+}
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+    background: rgba(255,255,255,.1);
+    color: #fff !important;
+}
+.sidebar .nav-link.active {
+    font-weight: 600;
+}
+
+/* ── Token Display ── */
+.token-header {
+    background: linear-gradient(135deg, var(--primary), #3f37c9);
+    padding: 2.5rem 1rem;
+}
+.token-header.bg-success {
+    background: linear-gradient(135deg, #2ecc71, #27ae60) !important;
+}
+
+/* ── Vendor Icon Card ── */
+.vendor-icon {
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ── Brand Icon on Auth ── */
+.brand-icon {
+    background: linear-gradient(135deg, #4361ee, #480ca8);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1rem;
+    width: 72px;
+    height: 72px;
+    color: white;
+}
+.brand-icon i { color: white !important; }
+
+/* ── Input Groups ── */
+.input-group-text {
+    background: #f8f9fa;
+    border-color: #dee2e6;
+}
+.form-control:focus, .form-select:focus {
+    box-shadow: 0 0 0 .2rem rgba(67,97,238,.15);
+    border-color: #4361ee;
+}
+
+/* ── Alerts ── */
+.alert {
+    border: none;
+    font-weight: 500;
+}
+.alert-success { background: #d1f5e3; color: #0a7c42; }
+.alert-danger   { background: #fde8ea; color: #b02030; }
+.alert-warning  { background: #fff3cd; color: #8a5e00; }
+.alert-info     { background: #d0f0fb; color: #0a5a72; }
+
+/* ── Animated bell for serving ── */
+@keyframes ring {
+    0%,100% { transform: rotate(0deg); }
+    20%      { transform: rotate(-15deg); }
+    40%      { transform: rotate(15deg); }
+    60%      { transform: rotate(-10deg); }
+    80%      { transform: rotate(10deg); }
+}
+.animate-ring {
+    animation: ring 1.2s ease-in-out infinite;
+    display: inline-block;
+}
+
+/* ── Progress bar countdown ── */
+#refreshBar {
+    transition: width 1s linear;
+}
+
+/* ── Queue status badges (larger) ── */
+.status-badge {
+    font-size: 1rem;
+    padding: .5rem 1.2rem;
+    border-radius: 2rem;
+}
+
+/* ── Responsive tweaks ── */
+@media (max-width: 768px) {
+    .sidebar { display: none !important; }
+    .token-header { padding: 1.5rem .5rem; }
+    .card-body { padding: 1rem !important; }
+    .display-1 { font-size: 4rem; }
+}
+
+/* ── Scrollbar (webkit) ── */
+::-webkit-scrollbar       { width: 6px; }
+::-webkit-scrollbar-track { background: #f1f1f1; }
+::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
+
+/* ── Utility ── */
+.rounded-4  { border-radius: 1rem !important; }
+.rounded-pill { border-radius: 50rem !important; }
+.fw-600 { font-weight: 600; }
+.text-xs  { font-size: .75rem; }

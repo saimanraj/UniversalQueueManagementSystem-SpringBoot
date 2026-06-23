@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Queue - UQS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <meta http-equiv="refresh" content="10">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="/customer/dashboard">
+            <i class="fas fa-ticket-alt me-2"></i>UQS System
+        </a>
+        <div class="navbar-nav ms-auto">
+            <a class="nav-link" href="/customer/dashboard"><i class="fas fa-arrow-left me-1"></i>Dashboard</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+
+            <div th:if="${success}" class="alert alert-success rounded-3 mb-3">
+                <i class="fas fa-check-circle me-2"></i><span th:text="${success}"></span>
+            </div>
+
+            <!-- Token not found -->
+            <div th:if="${status == null}" class="text-center py-5">
+                <i class="fas fa-search fa-4x text-muted mb-3"></i>
+                <h5>No active token found</h5>
+                <p class="text-muted">You don't have an active token for this vendor.</p>
+                <a href="/customer/vendors" class="btn btn-primary rounded-pill">Browse Vendors</a>
+            </div>
+
+            <!-- Token Found -->
+            <div th:if="${status != null}">
+
+                <!-- Being Served! -->
+                <div th:if="${status.status == 'SERVING'}" class="alert alert-success text-center rounded-4 mb-4 p-4">
+                    <i class="fas fa-bell fa-3x mb-2 animate-ring"></i>
+                    <h4 class="fw-bold">🎉 Your Turn!</h4>
+                    <p class="mb-0">Please proceed to the counter now.</p>
+                </div>
+
+                <!-- Main Token Card -->
+                <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-4">
+                    <div class="token-header text-center py-4"
+                         th:classappend="${status.status == 'SERVING'} ? 'bg-success' : 'bg-primary'">
+                        <p class="text-white-50 mb-1 small">YOUR TOKEN NUMBER</p>
+                        <div class="display-1 fw-bold text-white"
+                             th:text="'#' + ${status.tokenNo}"></div>
+                        <span class="badge fs-6 mt-2"
+                              th:classappend="${status.status == 'WAITING'} ? 'bg-warning text-dark' :
+                                              (${status.status == 'SERVING'} ? 'bg-light text-success' : 'bg-secondary')"
+                              th:text="${status.status}"></span>
+                    </div>
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold text-center mb-4" th:text="${status.vendorName}"></h5>
+
+                        <div class="row text-center g-3 mb-3">
+                            <div class="col-4">
+                                <div class="bg-warning bg-opacity-10 rounded-3 p-3">
+                                    <div class="fw-bold fs-3 text-warning"
+                                         th:text="${status.peopleAhead}">0</div>
+                                    <div class="text-muted small">Ahead</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="bg-info bg-opacity-10 rounded-3 p-3">
+                                    <div class="fw-bold fs-3 text-info"
+                                         th:text="${status.currentToken}">0</div>
+                                    <div class="text-muted small">Now Calling</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="bg-success bg-opacity-10 rounded-3 p-3">
+                                    <div class="fw-bold fs-3 text-success"
+                                         th:text="${status.etaMinutes}">0</div>
+                                    <div class="text-muted small">ETA (min)</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Queue paused warning -->
+                        <div th:if="${status.queuePaused}" class="alert alert-warning rounded-3 small">
+                            <i class="fas fa-pause me-2"></i>Queue is temporarily paused
+                        </div>
+
+                        <!-- Auto-refresh notice -->
+                        <div class="alert alert-light border rounded-3 small text-center mb-3">
+                            <i class="fas fa-sync-alt me-1 text-primary"></i>
+                            Page auto-refreshes every 10 seconds
+                            <div class="progress mt-2" style="height:4px">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
+                                     id="refreshBar" style="width:100%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Cancel Button -->
+                        <form th:if="${status.status == 'WAITING'}"
+                              th:action="@{/customer/cancel/{id}(id=${status.tokenId})}"
+                              method="post"
+                              onsubmit="return confirm('Are you sure you want to cancel your token?')">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                            <button type="submit" class="btn btn-outline-danger w-100 rounded-3">
+                                <i class="fas fa-times me-2"></i>Cancel My Token
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// Countdown progress bar for auto-refresh
+let timeLeft = 10;
+const bar = document.getElementById('refreshBar');
+if (bar) {
+    setInterval(() => {
+        timeLeft--;
+        if (bar) bar.style.width = (timeLeft / 10 * 100) + '%';
+    }, 1000);
+}
+</script>
+</body>
+</html>
